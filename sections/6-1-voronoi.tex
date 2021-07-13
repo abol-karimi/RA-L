@@ -3,13 +3,7 @@
 
 In this section, we prove that the Voronoi diagram computed by the vehicle with a given lidar scan is consistent with the global Voronoi diagram computed from the map.
 %
-% This proof provides global guarantees of safety and progress for local perception and planning.
-%
-% Sridhar: Probably not. The proof relies on the fact that the LiDAR range is pretty good and the tracks have minimum and maximum width.
-% The proof relies on a \emph{stability} property of Voronoi diagrams.
-%
 Intuitively, this proof formalizes the notion that a lidar with a sufficiently long range can detect all the edges for computing the Voronoi diagram for a small neighborhood.
-% on a \emph{uniform} track.
 %
 The proof will formalize the requirements on the track and the range of the lidar.
 %
@@ -18,10 +12,6 @@ At each point in time, only a subset of the walls are \emph{visible} to the lida
 A \emph{local Voronoi diagram} is the Voronoi diagram of the visible walls.
 %
 The \emph{global Voronoi diagram} is the Voronoi diagram of all walls.
-%
-% Instantianeous plan and instantaineous way point are not necessary for this discussion.
-%
-% An \emph{instantaneous plan} is a waypoint given to the pure-pursuit controller.
 %
 The planner chooses the waypoint from the intersection of the local Voronoi diagram and the lookahead circle.
 %
