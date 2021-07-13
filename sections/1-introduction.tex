@@ -1,0 +1,65 @@
+\section{Introduction}
+A typical workflow of an autonomous vehicle involves three main steps: perception, planning, and control.
+% 
+The estimation of the current state of the vehicle and its surroundings is performed by perception.
+%
+The sequence of states to be visited for safely navigating the environment is determined by planning.
+%
+And finally, the plan is realized through a control algorithm.
+%
+Crucially, these three steps assume that the vehicle has access to an accurate map of the environment that is either obtained from simultaneous localization and mapping or provided by the user.
+
+
+In contrast to the above mentioned workflow, in this paper, we pursue \emph{reactive planning and control}.
+%
+Here, we assume that the map of the environment and the relative position of the vehicle are not known.
+%
+Instead, the vehicle generates the plan and control input purely based on the current data that it receives from the sensors.
+%
+Hence, the plan and the control inputs are generated \emph{on-the-fly}.
+%
+We believe that investigating reactive planning and control based approaches are useful in instances where the environment is highly dynamic or mapping of the environment has not yet been performed or is computationally very expensive.
+%
+Additionally, the same planning and control mechanisms can be deployed in a wide range of scenarios as it doesn't require any map.
+
+
+One of the main drawbacks of reactive planning and control is that it is very challenging to prove that the safety and progress specifications are satisfied.
+%
+Since the map of the environment is not known, the waypoints generated during the motion planning are always relative to the vehicle.
+%
+Hence, as the vehicle navigates through the environment, the waypoint in the next instance also evolves.
+%
+\emph{This dynamic nature of the state of the vehicle and the waypoints makes the safety analysis very challenging.}
+%
+Furthermore, as the vehicle navigates through the environment, the new sensor readings could cause changes in the planned path making safety analysis a very challenging task.
+
+
+In this paper, we perform safety and performance analysis of a reactive planning and control algorithm deployed on an autonomous vehicle that is navigating a race lap.
+%
+Our planner involves computing a Voronoi diagram of the walls visible to the perception and our control algorithm implements the pure-pursuit algorithm.
+%
+Our safety and performance analysis has two parts.
+%
+In the first part, we demonstrate that the waypoint computed by the reactive planner is consistent with the planner that has access to the full map.
+%
+In the second part, we model the co-evolution of the state of the vehicle and the waypoint as a hybrid automata and compute an artifact called \emph{reachable set}.
+%
+The reachable set contains all the configurations visited by the autonomous vehicle while realizing the plan using the pure-pursuit control algorithm.
+%
+We show that the reachable set is safe (no overlap with the boundaries of the race track) and achieves a fixed point after the vehicle completes a full lap.
+%
+This proves that the vehicle satisfies the safety specification while guaranteeing that it will eventually complete the lap.
+%
+We also employ abstraction techniques from hybrid systems literature~\cite{tiwari2002series,prabhakar2015hybrid} to improve the efficiency of the reachable set computation algorithm.
+
+
+% Still not OK, but fine.
+The primary contribution of this paper is to establish the safety and performance specification of reactive planning and control algorithm used for navigation of autonomous vehicles.
+%
+Unlike many approaches that strictly investigate safety of planning or safety of closed loop control behavior, we consider both these aspects at the same time for proving safety.
+%
+In addition, we also show the effectiveness of our reactive planning and control algorithm in two ways.
+%
+First, we develop a simulation environment of a race lap using Unreal engine and deploy the vehicle in various types of race tracks.
+%
+Second, we implement the algorithm on an open source hardware platform of F1Tenth, a scale down version of autonomous vehicle built on Traxxas RC car.

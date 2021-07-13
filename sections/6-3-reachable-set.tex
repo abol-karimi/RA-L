@@ -1,0 +1,70 @@
+\subsection{Reachable Set Computation}
+
+\begin{definition}
+% \label{def:hybridExecution}
+
+Given a hybrid system $H$ modeled as an hybrid automaton and an initial set of states $\Theta$, an execution of $H$ is a sequence of trajectories and transitions $\xi_0 e_1 \xi_1 e_2 \ldots $ such that
+%
+(i) the first state of $\xi_0$ denoted as $q_0$ is in the initial set, i.e., $q_0 = (mode_0, x_0)\in \Theta$,
+%
+(ii) each trajectory $\xi_i$ is the solution of the differential equation $Flows_{i}$ of the corresponding mode $mode_i$, 
+%
+(iii) the state of the trajectory before each discrete transition $e_i = (mode_i, mode_{i+1})$ satisfies $guard(e_i)$,
+%
+(iv) and the state of the trajectory after taking the transition $e_i$ changes to $q_{i+1} = (mode_{i+1}, x_{i+1})$ where $x_{i+1} = reset (e_i, x_i)$.
+\end{definition}
+%
+The set of states encountered by all executions that conform to the above semantics is called the \emph{reachable set} and is denoted as $Reach_{[H, \Theta]}$. Bounded-time variant of these executions and the reachable set defined over the time bound $T$ is denoted as $Reach_{[H, \Theta]}^T$. We drop $H$ and/or $\Theta$ from $Reach_{[H, \Theta]}^T$ whenever it is clear from the context, and abuse the term \emph{trajectory} to denote the hybrid system execution as well as the solution of the differential equation of a mode.
+
+We say the reachable set computation has a \emph{fixed point at time $t$} when there exists $t \leq T$ such that $Reach^t = Reach^{t+1}$.
+Since it is computationally hard to compute the exact reachable set for most system classes including hybrid systems ~\cite{ALUR19953,10.1007/3-540-46430-1_6}, a verification engine is typically used to compute an overapproximation of the reachable set denoted as $\tilde{Reach^T}$. Given the sequence of reachable set computed at discrete time instances, the $i^{th}$ element in the is denoted as $Reach^T[i]$.
+
+\vspace{0.2cm}
+\begin{definition}
+\label{def:hybridSafe}
+A hybrid system $H$ with initial set $\Theta$, time bound $T$, and unsafe set $U$ is said to be safe with respect to its executions if all trajectories starting from $\Theta$ for bounded time $T$ are safe i.e., $\tilde{Reach^T} \cap U = \emptyset$.
+\end{definition}
+
+As the reachable set overapproximation $\tilde{Reach^T}$ includes more behaviors than the exact reachable set, its safety w.r.t. $U$ proves the safety of the exact reachable set w.r.t. $U$. However, the safety result is inconclusive when $\tilde{Reach^T} \cap U \neq  \emptyset$. We next discuss the fixed point based computation of the reachable set for a given initial set $\Theta$. 
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Computing a Fixed Point :} Recall that the vehicle motion for a given circuit is modeled as the hybrid automata where each mode is associated with an edge from the global Voronoi diagram.
+%
+We denote the lap as one full pass of the given circuit which is the sequence of edges from the global Voronoi diagram such that an end point of the last segment coincides with an initial point of the first segment. Informally, the number of laps represents the number of passes of the given circuit performed by the vehicle.
+% such that it returns to the initial waypoint (i.e., initial location) after traversing through the entire plan exactly once. 
+%
+
+As the vehicle completes one lap while following Voronoi edges by switching modes of the hybrid automaton, it may not arrive back at the exact system state it initially started from. As a consequence, the set of states reachable in a mode during next lap is not necessarily same as the set of states reachable in this mode during previous lap(s). Whereas, a fixed point at some time $t$ is an evidence that the set of reachable states beyond time $t$ is time-invariant. 
+
+Computing a fixed point for the reachable set serves three important purposes - (i) arriving at the same mode(s) after completing a lap underscores \emph{progress}, (ii) safety of the fixed point at $t$ ensures \emph{safety} of the reachable set at all times beyond $t$, (iii) it makes the analysis \emph{efficient} because one can save a significant amount of computational resources by not requiring to compute the reachable set after $t$ for a much larger initial set as explained next.
+
+% using guards in the hybrid automata, the course of the vehicle can deviate from its exact plan due to the overapproximation of the guard condition. Consequently, the vehicle, after completing the lap, may not arrive back at the exact system state it initially started from. 
+%
+% In other words, the vehicle configuration after one lap may not be contained in the initial set $\Theta$. Therefore, we continue computing the reachable set after one lap until the reachable set being computed for this lap converges to the reachable set from the previous lap(s). 
+%
+% We denote the reachable set computed up to the point of convergence as \emph{fixed point} because all behaviors starting from the fixed point configuration have already been explored during previous lap(s) (\manish{ref reachable set definition}).
+
+\item \textbf{Computing additional reachable sets :} The error bound of reachable set overapproximation is proportional to the size of the initial set $\Theta$, i.e., larger the initial set, higher is the overapproximation error. 
+%
+Whereas, computing the reachable set for each state in the infinite state system as ours is practically impossible. 
+%
+The standard approach for handling this trade-off is to refine the large initial set into smaller subsets and perform reachable set computation on each subset.
+
+A fixed point can assist in accelerating the reachable set computation for a large set $\Theta$. For any two given sets $\theta, \theta' \in \Theta$, it may not be necessary to compute the fixed point of $Reach_{\theta'}$ once the fixed point  $Reach_{\theta}^t$ at time $t$ is obtained. 
+%
+While computing $Reach_{\theta'}$, we iteratively check whether $Reach_{\theta'}^i[i] \subseteq Reach_{\theta}^t[i], i \leq t$, and halt the computation as soon as the containment check returns true. 
+%
+Generalizing this approach to more than two sets would mean computing the fixed point of one set and perform the containment check for the rest w.r.t. the fixed point.
+
+\item \textbf{Refinement techniques :} One way to computing the   reachable set for a large set $\Theta$ is to \emph{manually} obtain the fixed point candidate $\theta \in \Theta$, and find the partitions $\theta' \in \Theta, \theta \cup \theta' = \Theta$ such that each partition has its reachable set at some $i \leq t$  contained in the fixed point. 
+%
+An efficient strategy is to \emph{automatically} obtain both the fixed point candidate and other partitions. If the overapproximation error is too high for the given set $\Theta$, it is automatically refined into multiple sets. 
+%
+One of these subsets is picked for the fixed point candidacy. If the overapproximation error for the candidate  set is still high, it is further divided into parts until a candidate with its fixed point at some $t$ is found. The rest of $\Theta$ is automatically partitioned depending on whether their reachable sets are contained in the fixed point at $i \leq t$ or not.
+\end{itemize}
+% \begin{itemize}
+
+% \item First, explain the fixed point.
+% \item Then explain the "additional sets" i.e., when the new reachable sets be a part of the new set.
+% \item Automatic/manual refinement.
+% \end{itemize}

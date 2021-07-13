@@ -1,0 +1,22 @@
+% As a general rule, do not put math, special symbols or citations
+% in the abstract or keywords.
+\begin{abstract}
+In this paper, we perform safety and performance analysis of an autonomous vehicle that implements \emph{reactive planner and controller} for navigating a race lap.
+%
+Unlike traditional planning algorithms that have access to a map of the environment, reactive planner generates the plan purely based on the current input from sensors.
+%
+Our reactive planner selects a waypoint on the local Voronoi diagram and we use a pure-pursuit controller to navigate towards the waypoint.
+%
+Our safety and performance analysis has two parts.
+%
+The first part demonstrates that the reactive planner computes a plan that is locally consistent with the Voronoi plan computed with full map.
+%
+The second part involves modeling of the evolution of vehicle navigating along the Voronoi diagram as a hybrid automata.
+%
+For proving the safety and performance specification, we compute the reachable set of this hybrid automata and employ some enhancements that make this computation easier.
+%
+We demonstrate that an autonomous vehicle implementing our reactive planner and controller is safe and successfully completes a lap for five different circuits.
+%
+In addition, we have implemented our planner and controller in a simulation environment as well as a scaled down autonomous vehicle and demonstrate that our planner works well for a wide variety of circuits.
+
+\end{abstract}

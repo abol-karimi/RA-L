@@ -1,0 +1,15 @@
+\subsection{Problem definition}
+Consider that an autonomous vehicle is tasked to complete a circuit track without hitting the borders of the track.
+Completing the track is a \emph{progress} requirement, and avoiding the track boundaries is a \emph{safety} requirement.
+%
+Furthermore, the planning and control algorithms are required to be \emph{reactive}: at each time step, steering and speed controls are calculated from the current sensor data only.
+%
+Assuming that there is no lateral wheel slippage,
+we can isolate the problem of finding the steering control from finding the velocity control.
+%
+This is because if a wheel does not slip laterally, it will move along its direction and so the shape (i.e. footprint) of the trajectory only depends on the steering angle.
+%
+In other words, the shape of the trajectory is not influenced by the speed, as long as the speed is nonzero.
+%
+In this paper, we present a simple reactive planner and controller and formally analyze its safety and progress properties.
+

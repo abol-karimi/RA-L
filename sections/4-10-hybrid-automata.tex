@@ -1,0 +1,77 @@
+In this paper, we use the hybrid automata formalism to model the behavior of the autonomous vehicle that switches from one set point to another. For the sake of completeness, we provide the theoretical definition of hybrid automata.
+
+\subsection{Hybrid System}
+\begin{definition}
+\label{def:hybridSystem}
+ A \emph{hybrid system} $H$ is defined to be a tuple $\tup{Loc, X, Flow, Inv, Trans, Guard}$ where:
+%  \vspace{-0.2cm}
+\begin{description}
+\item[$Loc$] is a finite set of locations (also called modes).
+\item[$X$] $\subseteq \mathbb{R}^n$ is the state space of the behaviors.
+\item[$Flow$] $: Loc \rightarrow F(X)$ assigns a differential equation $\dot{x} = f(x)$ for each location of the hybrid system.
+\item[$Inv$] $: Loc \rightarrow 2^{\reals^n}$ assigns an invariant set for each location of the hybrid system.
+\item[$Trans$] $\subseteq Loc \times Loc$ is the set of discrete transitions.
+\item[$Guard$] $: Trans \rightarrow 2^{\reals^n}$ defines the set of states where a discrete transition is enabled.
+\end{description}
+% \vspace{-0.2cm}
+The invariants and guards are given as the conjunction of linear or non-linear constraints. The \textit{initial set of states} $\Theta$ is a subset of $Loc \times 2^{\reals^n}$. An \textit{initial state} $q_0$ is a pair $(Loc_0, x_0)$, such that $x_0 \in X$, and
+$(Loc_0, x_0) \in \Theta$.
+\end{definition}
+%
+
+% Given an initial state $x_0$, an execution $\xi$ of a hybrid automata is a sequence of trajectories and actions, i.e., $\xi = \tau_0 a_1 \tau_1 a_2 \ldots$ where each trajectory $\tau_{i}$ represents the evolution of the system according to a specific mode (i.e., is the solution of the mode's differential equation), and $a_i$ represents the discrete transition from mode $i$ to $i+1$ and $x_0$ is the initial state for $\tau_0$. Given an initial set $\Theta$, the reachable set is given as the set of all states visited by all executions starting from $\Theta$. 
+
+\vspace{0.2cm}
+\begin{definition}
+\label{def:hybridExecution}
+Given a hybrid system $H$ and an initial set of states $\Theta$, an execution of $H$ is a sequence of trajectories and transitions $\xi_0 a_1 \xi_1 a_2 \ldots $ such that
+%
+(i) the first state of $\xi_0$ denoted as $q_0$ is in the initial set, i.e., $q_0 = (Loc_0, x_0)\in \Theta$,
+%
+(ii) each trajectory $\xi_i$ is the solution of the differential equation of the corresponding location $Loc_i$, 
+%
+(iii) all the states in the trajectory $\xi_i$ respect the invariant of the location $Loc_i$,
+%
+and (iv) the state of the trajectory before each transition $a_i$ satisfies $Guard(a_i)$.
+\end{definition}
+%
+The set of states encountered by all executions that conform to the above semantics is called the \emph{reachable set} and is denoted as $Reach_{H}^{\Theta}$. Bounded-time variant of these executions and the reachable set is defined over the time bound $T$. We abuse the term \emph{trajectory} to denote the hybrid system execution as well as the solution of the differential equation of a location.
+
+\vspace{0.2cm}
+\begin{definition}
+\label{def:hybridSafe}
+A hybrid system $H$ with initial set $\Theta$, time bound $T$, and unsafe set $U \subseteq \mathbb{R}^n$ is said to be safe with respect to its executions if all trajectories starting from $\Theta$ for bounded time $T$ are safe i.e., $Reach_{H}^{\Theta} \cap U = \emptyset$.
+\end{definition}
+
+% A simulation engine that generates simulation as a proxy for an execution is typically used to compute the reachable set. For a unit time (also called the step), the hybrid system simulation starting from state $q_0$ is denoted as $\xi_{H}(q_0)$.
+
+% \begin{definition}
+% \label{def:stepSim}
+% A sequence $\xi_{H}(q_0) = q_0, q_1, q_2, \ldots$, where each $q_i = (Loc_i,
+% x_i)$, is a $(q_0)$-simulation of the hybrid system $H$ with initial set $\Theta$ 
+% if and only if $q_0 \in \Theta$ and each pair $(q_i,
+% q_{i+1})$ corresponds to either: 
+% %
+% (i) a continuous trajectory in location $Loc_i$ with $Loc_i=Loc_{i+1}$ such that a trajectory 
+% starting from $x_i$ would reach $x_{i+1}$ after exactly unit time with $x_i \in Inv(Loc_i)$, or 
+% %
+% (ii) a discrete transition from $Loc_i$ to $Loc_{i+1}$ (with $Loc_{i-1} = Loc_i$)
+% where  $\exists a \in Trans$ such that $x_i = x_{i+1}$, $x_i \in Guard(a)$ and $x_{i+1} \in
+% Inv(Loc_{i+1})$. Bounded-time variants of these simulations, with time bound $T$, are called $(q_0, T)$-simulations.
+% \end{definition}
+
+% \subsection{Problem Definition}
+% Consider that an autonomous vehicle is tasked to complete a lap on a closed circuit.
+% %Suppose that a closed-loop track is given.
+% At each time step, the task is to obtain the steering and velocity controls
+% from the current sensor (LiDAR) data for the vehicle such that
+% its trajectory does not intersect with the obstacles.
+% %
+% Assuming that the trajectory of the vehicle depends only on the steering angle,
+% we can isolate the problem of finding the steering control
+% from finding the velocity control.
+% We use the simple bicycle model that assumes no wheel slippage which, in turn, makes the trajectory independent of the velocity. 
+% %
+% Note that in order to respect this assumption, the velocity controller must ensure the velocity of the vehicle at any time is bound by the maximum possible velocity that does not cause slippage. This bound depends on the curvature of the trajectory
+% and the friction coefficient between the tire and the floor.
+% In this paper, we only tackle the problem of finding the steering control.

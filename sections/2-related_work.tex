@@ -1,0 +1,39 @@
+\section{Related work}
+\label{sec:relwork}
+
+Planning and control of autonomous vehicles as well as their safety verification has received a lot of attention in the recent past. A comprehensive survey of many of these techniques are provided in~\cite{paden2016survey,machines5010006}. In this section, we briefly discuss the various planning and control techniques and some of the verification techniques presented in the literature and contrast it with the techniques presented in this paper.
+
+
+Planners for autonomous vehicles are often hierarchical in nature~\cite{miller2008team,urmson2008autonomous}. The task planner selects the high level task to be performed by the vehicle and the motion planner implements the task decided by the task planner. In this paper, since we are concerned with an autonomous racing vehicle, the task of the vehicle is to complete the lap. We hence focus our attention to the motion planning aspect of the vehicle. 
+
+
+Motion planning of autonomous vehicles is primarily divided into two methods. First are the geometric based planning methods where the sequence of waypoints for the vehicle are decided on the geometry of the configuration space~\cite{thrun2006stanley,montemerlo2008junior}. Planning based on Voronoi diagrams is one of the popular geometric techniques for planning~\cite{takahashi1989motion,shkolnik2009reachability}.
+Second are the sampling based motion planning techniques.
+In particular, RRTs~\cite{lavalle1998rapidly,karaman2011sampling} and PRMs~\cite{kavraki1996probabilistic} are two of the most influential techniques. In the literature, several variants of RRTs and PRMs specific to the domain of autonomous vehicles have been proposed~\cite{xu2012real,aoude2010threat,levinson2011towards,perez2012lqr,kant1986toward}. All of these techniques assume that a partial map of the environment is provided and the location of the vehicle in the map is known. In the case of reactive planning and control, we do not assume that a partial map of the system is known.
+
+% Works on reactive planning go here.
+Reactive planning was proposed as an alternative to offline planning when all the information for completing a task are not available to the robot~\cite{georgeff1987reactive}, or when the environment is highly dynamic~\cite{belkhouche2009reactive} such as robot soccer~\cite{bruce2002real} or human collaborative environment~\cite{dumonteil2015reactive}.
+%
+Such reactive plans have been successfully deployed in robots that are resource constrained such as small-scale helicopters~\cite{redding2007real}, micro air vehicles~\cite{sharma2012reactive}, and autonomous sailboats~\cite{petres2011reactive}.
+%
+Additionally, reactive planners have also been used to modify an existing plan due to the presence of dynamic obstacles~\cite{moreau2019reactive,moreau2019reactive-be}.
+%
+Finally, when autonomous vehicles have to satisfy service requests along liveness specification given according to a temporal logic formula, a reactive sampling based motion planning algorithm has been used~\cite{vasile2014reactive,vasile2020reactive}. 
+
+Control of autonomous vehicles are also divided into two categories, geometric and model based. In geometric control techniques, the underlying geometric properties of the bicycle model are used in order to make the vehicle reach its destination. Two popular geometric control techniques are pure-pursuit~\cite{park2014development,Snider.2009} and Stanley~\cite{hoffmann2007autonomous}. These techniques are intuitive and easy to implement. 
+%
+Model based control techniques assume a given model of the vehicle and generate control inputs depending on the model~\cite{de1998feedback,murray1993nonholonomic}.
+%
+Model predictive control based methods that are path tracking, unconstrained, and with dynamic car model have been proposed in the literature~\cite{falcone2007predictive,falcone2008linear,raffo2009predictive}.
+%
+In fact, MPC based control methods have been used in other autonomous racing vehicles~\cite{talvala2011pushing}.
+
+% [Verification of plans for mobile robots]
+In safety analysis of mobile robots, synthesis of safe plan based on temporal logic specification has received a lot of attention~\cite{kress2009temporal,fainekos2009temporal,Kloetzertemp}. For proving the safety of the control algorithms, various reachable set computation methods have been proposed and evaluated for behavior of an autonomous vehicle at different scenarios~\cite{AlthoffDolan,LygerosSastry,ACCVerified,ACCTwoApproaches}. 
+%
+Given a map of the environment, accurate sensors, noise free localization, and accurate model of the vehicle dynamics, it is possible to provide a sequence of waypoints for moving along the track and prove that the vehicle finishes the lap without colliding with any obstacles using standard reachability based techniques. 
+%
+However, in this paper, we consider reactive planning and control, where the waypoint dynamically changes along with the vehicle position and orientation.
+
+% [Closest to our work]
+The works that are closest to the current work are~\cite{Das.2011} and ~\cite{Dolgov.2010}. In both these works, the plan of the vehicle is based on computing the Voronoi diagram. In~\cite{Das.2011}, the authors do not precisely model the interaction between the waypoint decided by the planner and the control algorithm and hence do not provide any safety guarantees even when the track is known apriori. In~\cite{Dolgov.2010}, in contrast to our work, the authors assume that a partial map of the environment is known. Furthermore, they do not provide any safety guarantees assuming an uncertainty in the initial conditions of the vehicle.
