@@ -1,22 +1,26 @@
-% As a general rule, do not put math, special symbols or citations
-% in the abstract or keywords.
 \begin{abstract}
-In this paper, we perform safety and performance analysis of an autonomous vehicle that implements \emph{reactive planner and controller} for navigating a race lap.
+We perform a safety and performance analysis of a \emph{reactive planner and controller} for an autonomous car racing on a circuit.
 %
-Unlike traditional planning algorithms that have access to a map of the environment, reactive planner generates the plan purely based on the current input from sensors.
+A \emph{reactive planner} operates purely based on the current sensor data to navigate the track.
 %
-Our reactive planner selects a waypoint on the local Voronoi diagram and we use a pure-pursuit controller to navigate towards the waypoint.
+In contrast, a \emph{map-based} planner uses a map, in addition to current sensor data, to localize the vehicle with respect to track boundaries and (static) obstacles.
+%
+Our reactive planner chooses a path on the Voronoi diagram of the current perception and our controller uses \emph{pure-pursuit} to track the path.
+% Reveals identity?
+A version of our planner and controller won the Generalized RAcing Intelligence Competition (GRAIC) at CPS-IoT Week.
 %
 Our safety and performance analysis has two parts.
 %
-The first part demonstrates that the reactive planner computes a plan that is locally consistent with the Voronoi plan computed with full map.
+The first part gives sufficient conditions such that the reactive plan is consistent with a non-reactive plan computed from the Voronoi diagram of the full map of the racing track.
 %
-The second part involves modeling of the evolution of vehicle navigating along the Voronoi diagram as a hybrid automata.
+The second part proves the safety and progress with respect to the non-reactive plan.
 %
-For proving the safety and performance specification, we compute the reachable set of this hybrid automata and employ some enhancements that make this computation easier.
+Therefore, given any map and vehicle for which the sufficient conditions hold, the reactive planner and controller safely complete a lap.
 %
-We demonstrate that an autonomous vehicle implementing our reactive planner and controller is safe and successfully completes a lap for five different circuits.
+The sufficient conditions may be either checked offline using a map of the track, or monitored online by the vehicle using sensor data.
 %
-In addition, we have implemented our planner and controller in a simulation environment as well as a scaled down autonomous vehicle and demonstrate that our planner works well for a wide variety of circuits.
+As examples, we prove the safety and progress of our reactive planner and controller for five different circuits.
+%
+In addition, we demonstrate that our implemented planner and controller work well for a wide variety of circuits both in a simulation environment and on a scaled down autonomous vehicle in an office environment.
 
 \end{abstract}
