@@ -1,25 +1,25 @@
 \begin{abstract}
-We perform a safety and performance analysis of a \emph{reactive planner and controller} for an autonomous car racing on a circuit.
+We perform a safety and performance analysis of a \emph{map-less} path planner and path-tracking controller for an autonomous car racing on a circuit.
 %
-A \emph{reactive planner} operates purely based on the current sensor data to navigate the track.
+Here, \emph{map-less} means that the  planner operates purely based on the current on-board sensor data to follow the racing track.
 %
-In contrast, a \emph{map-based} planner uses a map, in addition to current sensor data, to localize the vehicle with respect to track boundaries and (static) obstacles.
+In contrast, a \emph{map-based} planner uses both sensor data and a map (either known apriori or built at runtime) to localize the vehicle within the map and perhaps plan a racing line.
 %
-Our reactive planner chooses a path on the Voronoi diagram of the current perception and our controller uses \emph{pure-pursuit} to track the path.
+Our planner chooses a path on the Voronoi diagram of the current perception and our controller uses \emph{pure-pursuit} to track the path.
 % Reveals identity?
-A version of our planner and controller won the Generalized RAcing Intelligence Competition (GRAIC) at CPS-IoT Week.
+A version of our planner and controller won the Generalized RAcing Intelligence Competition (GRAIC) which includes dynamic obstacles as well.
 %
 Our safety and performance analysis has two parts.
 %
-The first part gives sufficient conditions such that the reactive plan is consistent with a non-reactive plan computed from the Voronoi diagram of the full map of the racing track.
+The first part gives sufficient conditions such that the plan is consistent with a map-based plan computed from the Voronoi diagram of the full map of the racing track.
 %
-The second part proves the safety and progress with respect to the non-reactive plan.
+The second part proves the safety and progress with respect to the map-based plan.
 %
-Therefore, given any map and vehicle for which the sufficient conditions hold, the reactive planner and controller safely complete a lap.
+Therefore, the map is needed for the proofs, but not needed by the planner or the controller.
 %
-The sufficient conditions may be either checked offline using a map of the track, or monitored online by the vehicle using sensor data.
+In particular, given any map and vehicle, if the sufficient conditions hold, then we can conclude that the map-less planner and controller can drive the vehicle safely and finish a lap.
 %
-As examples, we prove the safety and progress of our reactive planner and controller for five different circuits.
+As examples, we prove the safety and progress of our planner and controller for five different circuits.
 %
 In addition, we demonstrate that our implemented planner and controller work well for a wide variety of circuits both in a simulation environment and on a scaled down autonomous vehicle in an office environment.
 
