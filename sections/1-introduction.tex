@@ -42,37 +42,39 @@ While our planner can handle many static and dynamic obstacle scenarios, e.g. in
 
 Our planning and control algorithm is \emph{map-less}.
 %
-That is, the algorithm does not need an apriori given map, neither it builds a map.
+That is, the algorithm is not given a map, neither it builds a map.
 %
-In particular, we use a perception-planning-control loop where the perception operates solely on the latest on-board sensor data, and the planner makes a plan in the local coordinates of the vehicle.
+Furthermore, the algorithm is \emph{localization-less}, in the sense that the location of the vehicle relative to its final goal is not given, e.g. in contrast to using a GPS sensor.
 %
-However, our guarantee proofs are with respect to a given track and need the map of the track.
+In particular, we use a perception-planning-control loop where the perception operates solely on the latest data from the on-board LiDAR sensor, and the planner makes a plan in the local coordinates of the vehicle.
 %
-There are some advantages in not depending on maps or high-detail maps, and humans are capable of it.
-%
-Nevertheless, avoiding maps complicates the proof of \emph{progress} since the vehicle's plan is with respect to the local coordinates and not a global map.
-%
-We bridge this gap using mathematical properties of Voronoi diagrams.
+However, our guarantee proofs need the map of the track.
 
 
-Our perception algorithm relies solely on the measurements of a planar lidar sensor.
+The LiDAR sensor gives a 2D point cloud measuring the boundaries of the track.
 %
-These measurements sense the boundaries of the track and are converted to a set of polylines approximating the 2D point cloud.
+Our perception algorithm gives a set of polylines approximating the point cloud.
 %
-Therefore, the planning algorithm's input is a polygonal model of the racing track.
+Therefore, the planning algorithm's input is a polygonal model of the observed racing track.
 %
 Note that we can approximate curved track boundaries with polylines to any desired approximation error.
 %
 Our guarantees are on the planning and control parts only, and we ignore the perception algorithm in this paper.
 %
-In return, our proof analysis is valid for any perception that outputs a polygonal model of the track, say detection of track boundaries using camera-based computer vision.
+One can extend our guarantees to the whole system, i.e. perception-planning-control, simply by ensuring that the perception outputs polygons that cover the actual track boundaries.
+%
+For example, we can bloat the polygons more than the approximation error of polygonalization of the 2D point cloud.
+%
+This also makes it convenient to replace the LiDAR-based perception with a different method that outputs a polygonal model of the track, say detection of track boundaries using camera-based computer vision.
 
 
-Our planner computes the Voronoi diagram of the track boundaries visible to the sensor, then plans a path based on the diagram.
+We bridge the gap between local planning and global guarantees using mathematical properties of Voronoi diagrams.
 %
-We show that the plan would have been the same even if the sensor could see the whole track, if some conditions hold.
+Our planner computes the Voronoi diagram of the observed track boundaries, then plans a path based on the diagram.
 %
-These sufficient conditions bridge the gap between local planning and global guarantees.
+We show that the plan would have been the same even if the sensor could observe the whole track, granted some conditions hold.
+%
+These sufficient conditions require some restrictions on the minimum and maximum width of the track relative to the range of LiDAR, wheelbase of the car, etc.
 
 
 Our controller tracks the planned path using a pure-pursuit path-tracking algorithm.

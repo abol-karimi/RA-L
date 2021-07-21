@@ -10,21 +10,42 @@ They develop a system called MapLite that can navigate roads with only a sparse 
 Another application noted in \cite{Vasudevan.2021}, \cite{Deruyttere.2019} is when the navigation task is not defined by a source and destination on a map, but by verbal instructions from a user such as ``go ahead for about 200m until you hit a small intersection, then turn left and continue along the street before you see a yellow building on your right.''
 
 
-Since our focus is on guarantees, we only review the related literature on planning and control that give formal guarantees of safety and progress.
-
-
-In \cite{Ivanov.2020}, an end-to-end neural-network controller is developed for an F1/10 race car.
+Our formal verification results stand out in the literature since the planner and controller are map-less and localization-less.
 %
-Similar to our work, the controller is map-less;
+Furthermore, the tracks used are not too simplistic, and are on a par with some of the tracks used in racing competitions such as F1/10 and Indy Autonomous Challenge.
+%
+Finally, we guarantee both safety and progress, while most existing works focus on safety only.
+%
+In the following we review the very few related work that are close to our results.
+
+
+In \cite{Ivanov.2020, Ivanov-verifying.2020}, an end-to-end neural-network controller is developed for an F1/10 race car.
+%
+Similar to our work, the controller is map-less and localization-less;
 %
 It takes the raw LiDAR measurements as input and outputs the steering commands.
 %
-An advantage of our system is its interpretability due to the decomposition of the task to planning and control, where the plan is a path computed from the Voronoi diagram of the track boundaries.
+An advantage of our system is its interpretability due to the decomposition of the task to path-planning and path-tracking.
 %
-They perform safety verification with respect to a right-angle turn between two straight hallways.
+They perform safety and progress verification with respect to a right-angle turn between two straight hallways.
 %
 In contrast, our verification is for several polygonal circuit tracks with variable turn angles and track widths.
 %
 Furthermore, we verify progress for any number of laps around the circuit.
+%
+Similar to our work, they use \emph{reachable-set computation} to check whether the system reaches a desired state without entering the undesired states, i.e. making progress safely.
 
+
+
+In \cite{Bohrer.2019} a Simplex approach \cite{Seto.1998} is used to develop controllers with formal guarantees.
+%
+In this approach a \emph{monitor} is composed with an untrusted controller to check and correct its commands if they may lead to unsafe states.
+%
+They provide both safety and progress guarantees and the complexity of the tracks they use compare to ours.
+%
+However, they assume that a safe waypoint plan is provided, and the guarantees are for the waypoint-following controller only.
+%
+That is, the design of the planner is neither discussed nor verified.
+%
+Furthermore, their proofs are not fully automated and need human ingenuity to help in generating loop invariants and progress functions.
 
