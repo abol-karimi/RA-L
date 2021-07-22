@@ -7,7 +7,7 @@ obtaining and maintaining a detailed map is expensive, especially that roads cha
 %
 They develop a system called MapLite that can navigate roads with only a sparse topometric map, namely the OpenStreetMap of the environment.
 %
-Another application noted in \cite{Vasudevan.2021}, \cite{Deruyttere.2019} is when the navigation task is not defined by a source and destination on a map, but by verbal instructions from a user such as ``go ahead for about 200m until you hit a small intersection, then turn left and continue along the street before you see a yellow building on your right.''
+Another application noted in \cite{Vasudevan.2021}, \cite{Deruyttere.2019} is when the navigation task is not defined by a source and a destination on a map, but by verbal instructions from a user such as ``go ahead for about 200m until you hit a small intersection, then turn left and continue along the street before you see a yellow building on your right.''
 
 
 Our formal verification results stand out in the literature since the planner and controller are map-less and localization-less.
@@ -17,6 +17,8 @@ Furthermore, the tracks used are not too simplistic, and are on a par with some 
 Finally, we guarantee both safety and progress, while most existing works focus on safety only.
 %
 In the following we review the very few related work that are close to our results.
+%
+For a broader context on formal verification of autonomous vehicles see \cite{Rajabli.2020, Zhang.2020} for systematic literature reviews.
 
 
 In \cite{Ivanov.2020, Ivanov-verifying.2020}, an end-to-end neural-network controller is developed for an F1/10 race car.
@@ -37,7 +39,7 @@ Similar to our work, they use \emph{reachable-set computation} to check whether 
 
 
 
-In \cite{Bohrer.2019} a Simplex approach \cite{Seto.1998} is used to develop controllers with formal guarantees.
+In \cite{Bohrer.2019} a Simplex architecture \cite{Seto.1998} is used to develop controllers with formal guarantees.
 %
 In this approach a \emph{monitor} is composed with an untrusted controller to check and correct its commands if they may lead to unsafe states.
 %
