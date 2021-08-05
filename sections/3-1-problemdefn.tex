@@ -1,15 +1,16 @@
-\subsection{Problem definition}
-Consider that an autonomous vehicle is tasked to complete a circuit track without hitting the borders of the track.
-Completing the track is a \emph{progress} requirement, and avoiding the track boundaries is a \emph{safety} requirement.
+\subsection{The system}
+The \emph{task} is to drive a car on a circuit track.
 %
-Furthermore, the planning and control algorithms are required to be \emph{reactive}: at each time step, steering and speed controls are calculated from the current sensor data only.
+Finishing one or more laps is a \emph{progress} requirement, and avoiding the track boundaries is a \emph{safety} requirement.
 %
-Assuming that there is no lateral wheel slippage,
-we can isolate the problem of finding the steering control from finding the velocity control.
+The car has four wheels with Ackermann steering.
 %
-This is because if a wheel does not slip laterally, it will move along its direction and so the shape (i.e. footprint) of the trajectory only depends on the steering angle.
+The only sensor available is an on-board LiDAR sensor to measure the environment (i.e. track boundaries).
 %
-In other words, the shape of the trajectory is not influenced by the speed, as long as the speed is nonzero.
+A map of the track is not provided to be used by the planning and control algorithms.
 %
-In this paper, we present a simple reactive planner and controller and formally analyze its safety and progress properties.
+There are no static or dynamic obstacles on the track.
+%
+As discussed in the introduction, our perception algorithm approximates the LiDAR data with a set of line segments.
+
 

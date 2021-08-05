@@ -1,0 +1,41 @@
+\subsection{The planner}
+\label{sec:voronoiplanner}
+
+The first step is to calculate a Voronoi diagram.
+%
+Since the input to the Voronoi computation is a set of line segments, the Voronoi edges are either linear or parabolic arcs.
+%
+After computing the Voronoi diagram, we approximate each parabolic edge by a polyline using a \emph{deviation threshold}.
+%
+The \emph{deviation threshold} determines the maximum distance of the points on a parabolic arc from the approximating polyline.
+%
+This linear approximation simplifies the planner and its formal analysis.
+%
+A Voronoi diagram calculated by the planner is called a \emph{local} Voronoi diagram since it is computed for the track boundaries visible from LiDAR.
+%
+This is in contrast to the \emph{global} Voronoi diagram where the diagram is computed with respect to the whole track (which is not available to the car).
+
+
+The next step is to choose a \emph{tracking path} based on the local Voronoi diagram.
+%
+We choose a path directly on \emph{on} the Voronoi diagram to try to stay as far as possible from the track boundaries (i.e. to be as safe as possible).
+%
+However, one can choose other paths, e.g. to cut corners of the Voronoi diagram and optimize the length or curvature of the path.
+%
+We need to make sure that the path is chosen based on the parts of the local Voronoi diagram that are consistent with the global Voronoi diagram. 
+%
+This is to ease the formal verification of the planner and controller.
+%
+The sufficient conditions for this consistency will be provided later.
+%
+Basically, the local Voronoi diagram is guaranteed to coincide with the global Voronoi diagram within a particular distance from the LiDAR sensor.
+%
+Therefore, the planner considers only the local Voronoi edges within that disk.
+%
+If we consider all the line segments representing the left boundary of the track as one obstacle, and all the line segments for the right boundary of the track as the other obstacle, the degree of all Voronoi vertices will be two.
+%
+That is, the Voronoi diagram will be a path, and not branching.
+%
+This \emph{Voronoi path} is the median of the track.
+%
+The point on the Voronoi path closest to the car is chosen as the start of the \emph{tracking path} and the point at the end of the Voronoi path, on the front side of the car, will be the end of the tracking path.

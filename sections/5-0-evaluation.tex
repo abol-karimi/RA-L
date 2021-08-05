@@ -1,4 +1,18 @@
-\section{Evaluation of Planning and Control in Simulation and Noisy Environments}
+\section{Evaluation}
+In this section, we evaluate our fixed-point based reachable set computation on five different tracks with different characteristics. 
+%
+For each track given as the sequence of global Voronoi diagram edges, a new hybrid automaton model for the evolution of vehicle along this track is generated. Typically, a hybrid automata has as many discrete modes as the number of Voronoi edges. 
+%
+The dynamics in each mode of the  automaton is the closed loop behavior of the vehicle dynamics and the way point as described in Section~\ref{sec:model}.
+%
+Then, we employ a non-linear hybrid systems verification tool to computed the fixed point of the reachable set for each track.
+%is obtained with respect to a given initial set. 
+%
+The computation of a fixed point in each track underscores both safety and progress of the vehicle.
+%
+In addition, we tested the planning and control algorithm both in simulation and open source F1Tenth platform.\footnote{\url{https://tinyurl.com/ry5xhza}}
+% Videos of the experiments are available on the web.\footnote{\url{https://tinyurl.com/ry5xhza}} 
+% Once the closed loop behavior of the vehicle dynamics is obtained as discussed in the Section~\ref{sec:model}, 
+% we employ a non-linear hybrid system verification tool to compute the reachable set for each track.
 
-\subimport{}{5-1-simulation.tex}
-\subimport{}{5-2-physical_validation.tex}
+\subimport{}{5-1-verification.tex}

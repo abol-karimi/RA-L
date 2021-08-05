@@ -1,0 +1,31 @@
+\section{Guarantees of safety and progress}
+\label{sec:guarantees}
+
+In this section we perform rigorous analysis of the map-less planner and controller.
+%
+We prove that the car does not hit any of the track boundaries and will successfully complete one or more laps in several circuit tracks.
+
+
+In the first part, we prove that the \emph{local Voronoi diagram} is consistent with the \emph{global Voronoi diagram} under sufficient conditions.
+%
+Thus we can predict that the planner's output, which is a path on the local Voronoi diagram, is a path on the global Voronoi diagram.
+
+
+In the second part, we model the closed-loop dynamics of the car by composing the global Voronoi diagram, the path-tracking controller, and the bicycle model of a car.
+%
+We compute the \emph{reachable set} of the closed-loop behavior over a finite time horizon.
+%
+The reachable set includes the set of states visited by the trajectories starting from an initial set of states.
+%
+We demonstrate that the reachable set does not overlap with any of the track boundaries and finishes a lap.
+%
+If the reachable set achieves a \emph{fixed point} over a finite time, i.e. does not discover new states after a time step, then we can infer that the car will continue to finish more laps safely for any number of laps.
+%
+That is, with a finite computation we can prove safety and progress for an infinite time horizon.
+
+\subimport{}{4-1-voronoi.tex}
+\subimport{}{4-2-bicycle_model.tex}
+\subimport{}{4-3-system_model.tex}
+\subimport{}{4-4-reachable-set.tex}
+
+
