@@ -1,50 +1,8 @@
-\subsection{Coupled model of control and plan}
+\subsection{Closed-loop model of the system}
 \label{sec:model}
 
-% Sridhar: This is the bicycle model that should be in the introduction.
-
-% The bicycle model defines a dynamical system.
-% The \emph{state} of the system at time $t$
-% is described by the triple $(x(t), y(t), \theta(t))$
-% where $(x, y)$ is the coordinates of the rear wheel
-% in some inertial frame, say the racing track, and
-% $\theta$ is the angle of the direction of the car measured from the $x$-axis counter-clockwise.
-% If the speed (magnitude of velocity) of the car is $v$,
-% then
-% \[
-% \left\{
-% \begin{array}{l}
-%      \dot{x} = v \cdot cos(\theta) \\
-%      \dot{y} = v \cdot sin(\theta) \\
-%      \dot{\theta} = \frac{\displaystyle v}{L} tan(\delta)
-% \end{array}
-% \right.
-% \]
-% where the dot operator is differentiation with respect to time.\footnote{In this paper, we measure distance in meters and angle in radians unless otherwise specified.}
-
-As described in Section~\ref{sec:ppcontroller}, the pure-pursuit controller determines the steering angle $\delta$ according to the waypoint $(g_x, g_y)$ by the planner (given in Equation~\ref{eqn:purepursuit}). 
-%
-This waypoint lies on the local Voronoi diagram and always at a distance $\ell$ from the rear-axel. 
-%
-When the conditions given in Theorem~\ref{thm:voronoi} are satisfied, the waypoint also lies on the global Voronoi diagram.
-%
 Given that the Voronoi diagram is a conjunction of several line segments, without loss of generality, we assume that the waypoint lies on one such line segment.
-% the lookahead point always lies on one of the line segments of the Voronoi diagram.
-%
 
-Observe that as the vehicle moves towards the waypoint, the position and orientation of the vehicle changes.
-%
-This indeed changes the intersection of the lookahead circle with the Voronoi diagram and as a result, changes the waypoint.
-%
-Thus, the evolution of the state of the vehicle (position and orientation) and the waypoint are tightly coupled.
-%there is a coupled evolution of the position and the orientation of the vehicle and the waypoint.
-%
-In this section, we model the joint behavior of the waypoint along with the vehicle dynamics.
-%
-
-
-Observe that for pure-pursuit controller, the waypoint $(g_x, g_y)$ is described in the vehicle's coordinate system (i.e., the origin being the center of the rear-axel and the orientation of the vehicle as the x-axis).
-%
 We transform this waypoint along the coordinate axis where the Voronoi line segment is the x-axis, the rear wheel has coordinates $(x,y)$ and the orientation of the vehicle $\theta$ is w.r.t the line segment on the Voronoi diagram.
 After the coordinate transformation, the orientation $\delta$ in this coordinate system will be
 $$ tan(\delta) = \frac{2L}{\ell^2} (-\sqrt{\ell^2-y^2} \cdot sin(\theta)-y \cdot cos(\theta)). $$

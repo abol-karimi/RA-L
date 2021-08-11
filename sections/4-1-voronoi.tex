@@ -84,20 +84,48 @@ Therefore, no such $v$ exists and $w$ is not occluded.
 
 Note that $D_\ell$ may not necessarily contain Voronoi \emph{edges} i.e. points that are equidistant from two or more different track boundary points.
 %
-Since our planner chooses a path on the Voronoi edges, we need to make sure that the set of Voronoi edges in $D_\ell$ is nonempty.
+Our planner chooses a path on the Voronoi edges so we need to make sure that $D_\ell$ contains Voronoi edges.
 %
-The following theorem gives sufficient lower bounds on LiDAR's range and distance to track boundaries.
+Furthermore, our path-tracker chooses a point on the path that is at a \emph{lookahead} distance from the rear axle.
 %
+Therefore, we need to makes sure that the lookahead circle is contained in $D_\ell$ and intersects Voronoi edges.
+%
+The following theorem gives sufficient lower bounds on LiDAR's range and distance to track boundaries, and a valid range for the lookahead distance.
+
+
 Let $M$ be the maximum \emph{width} of the track.
 %
 That is, the distance between a global Voronoi edge and its closest track boundary is at most $\frac{M}{2}$.
+%
+Let $r$ be the coordinates of the rear axle in LiDAR's frame, and $\ell_a$ be the lookahead distance.
 
 \begin{theorem}
-If $d \geq \frac{M}{4}$ and $R \geq \frac{3M}{2}$ then $D_\ell$ contains at least one point on the Voronoi edges.
+Suppose that $d \geq \frac{M}{4} + \lVert r \rVert$ and $R \geq \frac{3M}{2}$.
+%
+Then
+$$
+\lVert r \rVert + \frac{M}{2} - d 
+\leq d - \lVert r \rVert,
+$$
+and if $\ell_a$ is between these bounds,
+then the lookahead circle is contained in $D_\ell$ and intersects a global Voronoi edge.
 \end{theorem}
 
 \begin{proof}
-First note that $d \leq \frac{M}{2}$ since LiDAR is \emph{on} the track i.e. between the left and right boundaries of the track.
+If $d \geq \frac{M}{4} + \lVert r \rVert$ then
+$ 2d \geq \frac{M}{2} + 2 \lVert r \rVert $
+so $ \lVert r \rVert + \frac{M}{2} - d 
+\leq d - \lVert r \rVert $.
+%
+Therefore,
+$$
+\lVert r \rVert + \frac{M}{2} - d 
+\leq \ell_a 
+\leq d - \lVert r \rVert,
+$$
+is a nonempty range for $\ell_a$.
+%
+Next, we have $d \leq \frac{M}{2}$ since LiDAR is \emph{on} the track i.e. between the left and right boundaries of the track.
 %
 Therefore, $R \geq \frac{3M}{2} \geq 3d$.
 %
@@ -108,15 +136,39 @@ $R-d \geq 2d$ so $\frac{R-d}{2} \geq d$.
 %
 Thus $\ell = \min \{ \frac{R-d}{2}, d \} = d$.
 %
-On the other hand, $d \geq \frac{M}{4}$ implies that $\frac{M}{2} \leq 2d = d + d$.
+Therefore, the condition $\ell_a \leq d - \lVert r \rVert = \ell - \lVert r \rVert$ implies that the lookahead circle is contained in $D_\ell$.
 %
-Hence $\frac{M}{2} \leq d + \ell $ so $\frac{M}{2} - d \leq \ell $.
+Let $e$ be a point on the global Voronoi edges and closest to LiDAR, so $\lVert e \rVert \leq \frac{M}{2} - d$.
+Then
+$$
+\lVert r - e \rVert 
+\leq \lVert r \rVert + \frac{M}{2} - d
+\leq \ell_a
+$$
 %
-However, if $p$ is a point closest to LiDAR and on the global Voronoi edges, we must have $\lVert p \rVert \leq \frac{M}{2} - d$.
+so $e$ is on the lookahead disk.
 %
-Thus $p \in D_\ell$, so $p$ must be on a local Voronoi edge by the previous theorem.
+The global Voronoi edges are connected and extend beyond the lookahead disk (and even $D_\ell$ since it is contained within the track boundaries) so the lookahead circle must intersect some Voronoi edges.
 \end{proof}
 
-The condition $d \geq \frac{M}{4} = \frac{1}{2} \cdot \frac{M}{2}$ implies that LiDAR is at most half-way from global Voronoi edges to track boundaries.
+
+\begin{corollary}
+Suppose that $R \geq \frac{3M}{2}$, and the distance between the rear axle and its closest track boundary is at least $\frac{M}{4} + 2\lVert r \rVert$.
 %
-This gives a convenient way to check whether global and local Voronoi diagrams are consistent, given a trajectory of the car and the map.
+Then $\ell_a = \frac{M}{4} $ is a valid lookahead radius.
+\end{corollary}
+
+\begin{proof}
+Let $b$ and $b'$ be the closest track boundaries to the rear axle and LiDAR, respectively.
+%
+Then
+$$
+\frac{M}{4} + 2 \lVert r \rVert
+\leq \lVert r - b \rVert
+\leq \lVert r - b' \rVert
+\leq \lVert r \rVert + d.
+$$
+Hence $d \geq \frac{M}{4} + \lVert r \rVert$ and the previous theorem applies.
+\end{proof}
+
+The bound $\frac{M}{4} + 2\lVert r \rVert$ gives valid regions of the track for the rear axle so that the pure-pursuit's goal point will be on the global Voronoi edges.
