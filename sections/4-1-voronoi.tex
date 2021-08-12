@@ -93,39 +93,30 @@ Therefore, we need to makes sure that the lookahead circle is contained in $D_\e
 The following theorem gives sufficient lower bounds on LiDAR's range and distance to track boundaries, and a valid range for the lookahead distance.
 
 
-Let $M$ be the maximum \emph{width} of the track.
+Let the \emph{width} of the track at a global Voronoi edge be twice the distance to its closest track boundaries.
 %
-That is, the distance between a global Voronoi edge and its closest track boundary is at most $\frac{M}{2}$.
+Let $m$ and $M$ be the minimum and maximum width of the track, respectively.
 %
 Let $r$ be the coordinates of the rear axle in LiDAR's frame, and $\ell_a$ be the lookahead distance.
 
 \begin{theorem}
-Suppose that $d \geq \frac{M}{4} + \lVert r \rVert$ and $R \geq \frac{3M}{2}$.
+Let $e$ and $b$ be the closest points to $r$ on the global Voronoi edges and track boundaries, respectively.
 %
-Then
+Suppose that 
+$\lVert r-e \rVert \leq \lVert r-b \rVert - 2 \lVert r \rVert$ and 
+$R \geq \frac{3M}{2}$.
+%
+Then for any $\ell_a$ that 
 $$
-\lVert r \rVert + \frac{M}{2} - d 
-\leq d - \lVert r \rVert,
+\lVert r-e \rVert 
+\leq \ell_a
+\leq \lVert r-b \rVert - 2 \lVert r \rVert,
 $$
-and if $\ell_a$ is between these bounds,
-then the lookahead circle is contained in $D_\ell$ and intersects a global Voronoi edge.
+the lookahead circle is contained in $D_\ell$ and intersects a global Voronoi edge.
 \end{theorem}
 
 \begin{proof}
-If $d \geq \frac{M}{4} + \lVert r \rVert$ then
-$ 2d \geq \frac{M}{2} + 2 \lVert r \rVert $
-so $ \lVert r \rVert + \frac{M}{2} - d 
-\leq d - \lVert r \rVert $.
-%
-Therefore,
-$$
-\lVert r \rVert + \frac{M}{2} - d 
-\leq \ell_a 
-\leq d - \lVert r \rVert,
-$$
-is a nonempty range for $\ell_a$.
-%
-Next, we have $d \leq \frac{M}{2}$ since LiDAR is \emph{on} the track i.e. between the left and right boundaries of the track.
+We have $d \leq \frac{M}{2}$ since LiDAR is \emph{on} the track i.e. between the left and right boundaries of the track.
 %
 Therefore, $R \geq \frac{3M}{2} \geq 3d$.
 %
@@ -136,39 +127,70 @@ $R-d \geq 2d$ so $\frac{R-d}{2} \geq d$.
 %
 Thus $\ell = \min \{ \frac{R-d}{2}, d \} = d$.
 %
-Therefore, the condition $\ell_a \leq d - \lVert r \rVert = \ell - \lVert r \rVert$ implies that the lookahead circle is contained in $D_\ell$.
+Let $b'$ be a point on the track boundaries and closest to LiDAR.
 %
-Let $e$ be a point on the global Voronoi edges and closest to LiDAR, so $\lVert e \rVert \leq \frac{M}{2} - d$.
-Then
-$$
-\lVert r - e \rVert 
-\leq \lVert r \rVert + \frac{M}{2} - d
-\leq \ell_a
-$$
+Then $ \lVert b' \rVert = d$ and
+$\lVert r-b \rVert 
+\leq \lVert r-b' \rVert 
+\leq \lVert r \rVert + d $.
 %
-so $e$ is on the lookahead disk.
+Hence
+$\ell_a 
+\leq \lVert r-b \rVert - 2 \lVert r \rVert
+\leq d - \lVert r \rVert
+= \ell - \lVert r \rVert$,
+so the lookahead circle is contained in $D_\ell$.
 %
-The global Voronoi edges are connected and extend beyond the lookahead disk (and even $D_\ell$ since it is contained within the track boundaries) so the lookahead circle must intersect some Voronoi edges.
+On the other hand, $\lVert r-e \rVert \leq \ell_a$ implies that $e$ is on or inside the lookahead circle.
+%
+Furthermore, the global Voronoi edges are connected and extend beyond the lookahead circle (and even $D_\ell$ since it is contained within the track boundaries) so the lookahead circle must intersect some Voronoi edges.
 \end{proof}
+
+The condition $\lVert r-e \rVert = \lVert r-b \rVert $ states that the rear axle is on the median between the global Voronoi edges and one side of the track.
+%
+The condition $\lVert r-e \rVert \leq \lVert r-b \rVert - 2 \lVert r \rVert$ in the above theorem states that the rear axle is at least $\lVert r \rVert$ meters closer to the global Voronoi edges than to the the median between either side of the track and the Voronoi edges.
+%
+The controller can have a variable lookahead radius within the range given by the theorem, which is useful in the trade-off between the stability and convergence of path-tracking.
+%
+However, a variable lookahead radius complicates the dynamics of the system and its formal analysis.
+%
+Therefore, we want a fixed lookahead radius that works for the whole track.
 
 
 \begin{corollary}
-Suppose that $R \geq \frac{3M}{2}$, and the distance between the rear axle and its closest track boundary is at least $\frac{M}{4} + 2\lVert r \rVert$.
+Suppose that $R \geq \frac{3M}{2}$, and $\lVert r-e \rVert \leq \frac{m}{4} - \lVert r \rVert $ where $e$ is a point on the global Voronoi edges and closest to $r$.
 %
-Then $\ell_a = \frac{M}{4} $ is a valid lookahead radius.
+Then $\ell_a = \frac{m}{4} - \lVert r \rVert$ is a valid lookahead radius.
 \end{corollary}
 
 \begin{proof}
-Let $b$ and $b'$ be the closest track boundaries to the rear axle and LiDAR, respectively.
+Since $m$ is the minimum width of the track, we have 
+$\frac{m}{2} 
+\leq  \lVert b-e \rVert
+\leq \lVert r-b \rVert + \lVert r-e \rVert$
+so
+$$\frac{m}{4} + \frac{m}{4} - \lVert r-e \rVert - 2 \lVert r \rVert
+\leq \lVert r-b \rVert - 2 \lVert r \rVert.
+$$
 %
-Then
+On the other hand, 
+$\lVert r-e \rVert \leq \frac{m}{4} - \lVert r \rVert $ 
+implies that 
+$ \frac{m}{4} - \lVert r \rVert - \lVert r-e \rVert \geq 0$,
+so
+$$\frac{m}{4} - \lVert r \rVert 
+\leq \frac{m}{4} - \lVert r \rVert + \frac{m}{4} - \lVert r \rVert - \lVert r-e \rVert 
+\leq \lVert r-b \rVert - 2 \lVert r \rVert.
 $$
-\frac{M}{4} + 2 \lVert r \rVert
-\leq \lVert r - b \rVert
-\leq \lVert r - b' \rVert
-\leq \lVert r \rVert + d.
+%
+Therefore,
+$$\frac{m}{4} - \lVert r \rVert 
+= \ell_a
+\leq \lVert r-b \rVert - 2 \lVert r \rVert
 $$
-Hence $d \geq \frac{M}{4} + \lVert r \rVert$ and the previous theorem applies.
+and the previous theorem applies.
 \end{proof}
 
-The bound $\frac{M}{4} + 2\lVert r \rVert$ gives valid regions of the track for the rear axle so that the pure-pursuit's goal point will be on the global Voronoi edges.
+The choice of $\ell_a = \frac{m}{4} - \lVert r \rVert$ only depends on the minimum width of the track and the distance of the rear axle to LiDAR, both of which are constants.
+%
+Note that the condition $\lVert r-e \rVert \leq \frac{m}{4} - \lVert r \rVert $ implies that $0 \leq \frac{m}{4} - \lVert r \rVert $ so the distance between LiDAR and the rear axle can be at most a quarter of the minimum width of the track.
