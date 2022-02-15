@@ -53,19 +53,14 @@ However, our guarantee proofs need the map of the track.
 
 The LiDAR sensor gives a 2D point cloud measuring the boundaries of the track.
 %
-Our perception algorithm gives a set of polylines approximating the point cloud.
+Our perception algorithm outputs a set of polylines approximating the point cloud.
 %
 Therefore, the planning algorithm's input is a polygonal model of the observed racing track.
 %
 Note that we can approximate curved track boundaries with polylines to any desired approximation error.
 %
 Our guarantees are on the planning and control parts only, and we ignore the perception algorithm in this paper.
-%
-One can extend our guarantees to the whole system, i.e. perception-planning-control, simply by ensuring that the perception outputs polygons that cover the actual track boundaries.
-%
-For example, we can bloat the polygons more than the approximation error of polygonalization of the 2D point cloud.
-%
-This also makes it convenient to replace the LiDAR-based perception with a different method that outputs a polygonal model of the track, say detection of track boundaries using camera-based computer vision.
+
 
 
 We bridge the gap between local planning and global guarantees using mathematical properties of Voronoi diagrams.
