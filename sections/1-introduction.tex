@@ -1,90 +1,118 @@
 \section{Introduction}
-\emph{Racing} is used to push the development, verification and validation of automated vehicles.
-%
-A \emph{racing task} may be fairly simple to specify, namely finishing laps as soon as possible, while remaining between the track boundaries.
-%
-Furthermore, static and dynamic obstacles may exist on the track, as in slalom or head-to-head racing.
-%
-This provides a semi-controlled environment to focus on lower-levels of automation such as path-planning, path-tracking, speed control, dynamic-obstacle avoidance, object detection and tracking, etc.
-%
-In a more complicated environment, such as an urban area or a high-way, more tasks and constraints are required.
-%
-For example, an automated vehicle may be required to route and deliver goods, ride passengers and customize the route to their needs, drive an emergency vehicle such as a fire truck as fast as possible, while following traffic rules and navigating around pedestrians and bicyclists safely.
-%
-The focus of this paper is on tasks in lower-levels of automation as in racing.
 
-
-In recent years several autonomous racing competitions have emerged and sparked new directions in research.
+%--- Why racing?
+\emph{Racing} provides relatively simple environments and requirements for development, verification and validation of automated driving algorithms, e.g. path-planning, path-tracking, obstacle avoidance, object detection and tracking, etc.
 %
-For example, the F1/10 competition uses 1/10 scale autonomous vehicles, the Indy Autonomous Challenge uses full-scale race cars, and the Generalized RAcing Intelligence Competition (GRAIC) is a simulation-only race with challenging dynamic-obstacle avoidance scenarios.
+Betz et al. \cite{Betz.2022} survey several autonomous racing competitions that have emerged over the past few years.
+%
+For example, the F1/10 competition uses 1/10 scale autonomous cars, the Indy Autonomous Challenge uses full-scale race cars, and the Generalized RAcing Intelligence Competition (GRAIC) is a simulation-only race with challenging dynamic-obstacle scenarios.
+%
+A \emph{racing task} may be simply finishing several laps, while remaining within the track boundaries, as in F1/10 time trials.
+%
+Furthermore, the task may involve avoiding static and dynamic obstacles on the track, as in GRAIC or head-to-head racing in F1/10.
 %
 A minimal requirement for such racing tasks is \emph{safety} and \emph{progress}.
 %
-Here \emph{safety} means avoiding obstacles and remaining within the track limits, while \emph{progress} means finishing one or more laps.
+Here \emph{safety} means avoiding obstacles and remaining within the track boundaries, while \emph{progress} means finishing one or more laps.
 %
-Furthermore, the \emph{performance} requirement is to make progress faster than other competitors in order to win a race.
+Furthermore, the \emph{performance} requirement is to make progress faster than other competitors.
 %
 In this paper we focus on the safety and progress requirements.
 
 
-Our priority is to develop planning and control algorithms that not only can win competitions and push the performance, but also provably guarantee their safety, progress and performance.
+%--- The minimalistic approad to design
+One approach to study motion planning is \emph{minimalism} \cite{Tovar.2009}.
 %
-We developed an algorithm that we implemented for both an F1/10 car and for the GRAIC competition.
+That is, to study the minimum information and computing resources required to perform the planning task.
 %
-Our implementation won the GRAIC competition.
+For example, a \emph{map-less} \cite{Tai.2017} planner is not given a map, neither it builds a map.
 %
-In this paper, we briefly explain the algorithm, then dedicate the rest to its safety and progress analysis and proofs.
+A \emph{localization-less} planner does not know the location of the vehicle relative to its goal, in contrast to using GPS or WiFi localization \cite{Tai.2017}.
 %
-We leave the analysis of performance for future work.
+An \emph{oblivious} \cite{Flocchini.2012} planner does not remember any information from the previous perceive-plan-control cycle.
 %
-While our planner can handle many static and dynamic obstacle scenarios, e.g. in the GRAIC competition, our guarantee proofs are only for obstacle-free racing such as in F1/10 time trials.
+A challenge in designing such minimalistic planners is to ensure their consistency between consecutive cycles.
+%
+We developed a \emph{map-less} \emph{oblivious} Voronoi-based motion planner which won the GRAIC 2021 competition.
+%
+A version of that planner that is furthermore \emph{localization-less} was developed for an F1/10 car and tested both in simulation and on the physical car, and verified for a bicycle model of a car and several polygonal models of race circuits.
+%
+This shows the potential of Voronoi diagrams for minimalistic motion planning with guarantees.
 
 
-Our planning and control algorithm is \emph{map-less}.
+%--- Planner overview
+Our algorithm for obstacle-free racing is a perceive-plan-control loop.
 %
-That is, the algorithm is not given a map, neither it builds a map.
+The perception gives the track boundaries within a sensing radius of the car as a set of line segments.
 %
-Furthermore, the algorithm is \emph{localization-less}, in the sense that the location of the vehicle relative to its final goal is not given, e.g. in contrast to using a GPS sensor.
+The planner computes the Voronoi diagram of these track boundaries, then outputs a line segment as the path to follow.
 %
-In particular, we use a perception-planning-control loop where the perception operates solely on the latest data from the on-board LiDAR sensor, and the planner makes a plan in the local coordinates of the vehicle.
+This line segment is either a Voronoi edge or a linear approximation of a parabolic Voronoi edge.
 %
-However, our guarantee proofs need the map of the track.
-
-
-The LiDAR sensor gives a 2D point cloud measuring the boundaries of the track.
+The controller tracks the planned path using a pure-pursuit path-tracker.
 %
-Our perception algorithm outputs a set of polylines approximating the point cloud.
-%
-Therefore, the planning algorithm's input is a polygonal model of the observed racing track.
-%
-Note that we can approximate curved track boundaries with polylines to any desired approximation error.
-%
-Our guarantees are on the planning and control parts only, and we ignore the perception algorithm in this paper.
+Note that a nonholonomic car cannot perfectly track the planned path.
 
 
 
-We bridge the gap between local planning and global guarantees using mathematical properties of Voronoi diagrams.
+%--- Main contribution
+The main contribution of this paper is the safety and progress analysis for a \emph{map-less} \emph{localization-less} \emph{oblivious} motion planner.
 %
-Our planner computes the Voronoi diagram of the observed track boundaries, then plans a path based on the diagram.
+One of the challenges with verification of the planner is the complexity of the perceive-plan-control dynamical system due to the complexity of perception (computing visible track boundaries), and lack of localization data to bypass that complexity.
 %
-We show that the plan would have been the same even if the sensor could observe the whole track, granted some conditions hold.
+The complexities of the planner, controller and the controlled plant (bicycle model) further complicate the closed-loop system function.
 %
-These sufficient conditions require some restrictions on the minimum and maximum width of the track relative to the range of LiDAR, wheelbase of the car, etc.
+The core novelty of our guarantee is proving a \emph{local consistency} property of Voronoi diagrams, which ensures that the Voronoi diagram of the track boundaries that are within a local area of the car is equal to the Voronoi diagram of all track boundaries.
+%
+Therefore, the dynamical system can be defined with respect to the Voronoi diagram of the whole track which does not change and can be computed offline, and enables bypassing the complexity of the perception function.
+%
+We believe such properties of Voronoi diagrams and their applications deserve more research.
+%
+The contributions of this paper are as follows:
+\begin{enumerate}
+\item
+Development of a map-less localization-less oblivious motion planner.
+\item
+Proving a local consistency property of Voronoi diagrams.
+\item
+Modeling a car together with its planner, controller and the racing track as a hybrid automata.
+\item
+Verification of the safety and progress of the planner on several tracks using off-the-shelf tools for reachability analysis of hybrid automata.
+\end{enumerate}
 
 
-Our controller tracks the planned path using a pure-pursuit path-tracking algorithm.
-%
-Note that the trajectory of the vehicle is different from the planned path, since the vehicle is nonholonomic.
-%
-We need to guarantee that the trajectory is safe and that it makes progress.
-%
-We also need to prove that the trajectory satisfies the sufficient conditions assumed in the analysis of the planner.
-%
-The proof involves composing the dynamical model of the vehicle, with the planned path and the controller, to get a closed-loop hybrid dynamical system.
-%
-Then we can prove that if the car starts in an \emph{initial set}, say located around the start of the track and heading roughly towards the direction of the track, then it finishes the track safely within a bounded time horizon.
-%
-Using an inductive argument we can extend such a proof to an infinite time horizon and prove that a car can safely finish any number of laps on a circuit track.
-%
-On the other hand, we can strengthen the safety guarantee (no-collisions) to a guarantee of some minimum clearance from track boundaries.
 
+%--- Modeling with hybrid automata
+We model the perceive-plan-control closed-loop with a hybrid automata.
+%
+Each discrete mode of the automata corresponds to the closed-loop when following a fixed line segment.
+%
+The discrete mode changes when the planner returns a different line segment.
+%
+The state of the system in a discrete mode is the \emph{pose} of the car i.e. its 2D position and 1D orientation.
+%
+The steering angle of the car is determined from the pose, the planned path, and the pure-pursuit formula.
+%
+This results in a continuous non-linear dynamics in each discrete mode of the automata.
+%
+The \emph{initial state} of the system is an initial discrete mode and an initial pose.
+%
+Uncertainty in the initial pose is modeled as an \emph{initial set} of poses.
+
+
+%-- Reachable-set computation
+A hybrid automata can be simulated from an initial state until a finite time horizon, resulting the trajectory of the car.
+%
+An initial set results in a set of trajectories.
+%
+The states encountered in the trajectories comprise the \emph{reachable set} of the system over the time horizon.
+%
+The reachable set then can be checked for safety and progress.
+%
+For example, if all the trajectories pass the finish line then progress is established.
+%
+If the reachable set does not grow after a time horizon, the set is a \emph{fixed-point} of the closed-loop.
+%
+A fixed-point is the same as the reachable set over an infinite time horizon.
+%
+Using a fixed-point we can prove that the system is safe over an infinite time horizon, or that it finishes an infinite number of laps.
