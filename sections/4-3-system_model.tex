@@ -62,11 +62,11 @@ The closed loop behavior of the vehicle dynamics is therefore given as:
 
 Notice that this closed loop behavior is accurate as long as the way-point lies on the same line segment.
 %
-When the vehicle makes progress, the lookahead circle would intersect with a different line segment on the Voronoi diagram.
+When the vehicle makes progress, the lookahead circle would intersect with a different line segment on the Voronoi-based planner.
 %
 As a result, the way-point as well as coordinate system for modeling the evolution of vehicle state change.
 %
-We model this behavior as a hybrid automaton for a given circuit.
+We model this switching behavior using a hybrid automaton for a given circuit which is given as a sequence of line segments.
 
 \begin{figure}
 \centering

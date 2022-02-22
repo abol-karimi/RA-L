@@ -1,11 +1,18 @@
 \subsection{Consistency of local Voronoi diagrams}
 \label{sec:localVoronoi}
 
-In this section, we prove that the local and global Voronoi diagrams are the same within a particular distance from LiDAR.
+\begin{figure}
+\centering
+\includegraphics[width=4cm]{Figures/voronoi_occlusion.pdf}
+\caption{If the Voronoi cell of a point in $D_\ell$ is identified by a track boundary $w$, then no track boundary $v$ occludes $w$. The green dot is LiDAR.}
+\label{fig:voronoi-global-to-local}
+\end{figure}
+
+Inconsistencies between the global and local Voronoi diagrams are due to the fact that some track boundaries may not be \emph{visible} due to two reasons: being out of LiDAR's range, or occluded by other track boundaries.
 %
-A part of the track boundaries may not be \emph{visible} due to two reasons: being out of LiDAR's range, or occluded by other track boundaries.
+In this section, we prove that the local and global Voronoi diagrams are the same within a particular distance from LiDAR.
 
-
+%--- definitions
 Let $R$ be the range of LiDAR, 
 and $d$ be the minimum distance of the track boundaries to LiDAR.
 %
@@ -14,18 +21,10 @@ If $d \leq R$ then at least one point on the track boundaries is visible to LiDA
 For any visible point $v$ on the track boundaries we have $d \leq \lVert v \rVert \leq R$ where $ \lVert \cdot \rVert $ is the Euclidean norm in LiDAR's coordinates.
 %
 We have the following guarantees:
-
-\begin{figure}
-\centering
-\includegraphics[width=4cm]{Figures/voronoi_occlusion.pdf}
-\caption{If the Voronoi cell of a point in $D_\ell$ is identified by a track boundary $w$, then no track boundary $v$ occludes $w$. The green dot is LiDAR.}
-\label{fig:voronoi-global-to-local}
-\end{figure}
-
 \begin{theorem}
 Suppose that $d \leq R$.
 %
-Then the local and global Voronoi diagrams coincide on the disk $D_\ell$ of radius $\ell$ centered at LiDAR where
+Then the local and global Voronoi diagrams coincide within the disk $D_\ell$ of radius $\ell$ centered at LiDAR where
 $$
 \ell = \min \{ \frac{R-d}{2}, d \}.
 $$
@@ -73,7 +72,9 @@ Choose $v$ to be such an occluding point that is the closest to LiDAR, so that $
 %
 We must have $d \leq \lVert v \rVert $, by the definition of $d$.
 %
-Therefore, $\ell \leq d \leq \lVert v \rVert $.
+On the other hand, $\ell \leq d$ by the definition of $\ell$.
+%
+Thus $\ell \leq \lVert v \rVert $ so $v \not\in D_\ell$.
 %
 Hence, all points in $D_\ell$ are closer to $v$ than to $w$, as shown in Fig~\ref{fig:voronoi-global-to-local}, since $D_\ell$ is on the left of the perpendicular bisector of the segment $vw$. 
 %
@@ -82,6 +83,7 @@ In particular, $p$ is closer to $v$ than to $w$, which contradicts the choice of
 Therefore, no such $v$ exists and $w$ is not occluded.
 \end{proof}
 
+%--- main point?
 Note that $D_\ell$ may not necessarily contain Voronoi \emph{edges} i.e. points that are equidistant from two or more different track boundary points.
 %
 Our planner chooses a path on the Voronoi edges so we need to make sure that $D_\ell$ contains Voronoi edges.

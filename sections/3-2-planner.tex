@@ -14,7 +14,7 @@ The same linear approximation is done in the formal analysis of the planner usin
 %
 We abuse the terminology and refer to this linear approximation as the Voronoi diagram too.
 %
-This linear approximation simplifies the planner and its formal analysis.
+This linear approximation simplifies path-tracking and its formal analysis.
 %
 A Voronoi diagram calculated by the planner is called a \emph{local} Voronoi diagram since it is computed for the track boundaries visible from LiDAR.
 %
@@ -24,7 +24,7 @@ This is in contrast to the \emph{global} Voronoi diagram where the diagram is co
 %--- The planned path
 The next step is to choose a \emph{tracking path} based on the local Voronoi diagram.
 %
-We choose a path directly on \emph{on} the Voronoi diagram to try to stay as far as possible from the track boundaries (i.e. to be as safe as possible).
+We choose a path directly \emph{on} the Voronoi diagram to try to stay as far as possible from the track boundaries (i.e. to be as safe as possible).
 %
 If we consider all the line segments representing the left boundary of the track as one obstacle, and all the line segments for the right boundary of the track as the other obstacle, the degree of all Voronoi vertices will be two.
 %
