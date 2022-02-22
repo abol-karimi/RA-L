@@ -1,6 +1,7 @@
 \subsection{The planner}
 \label{sec:voronoiplanner}
 
+%--- Voronoi diagram
 The first step is to calculate a Voronoi diagram.
 %
 Since the input to the Voronoi computation is a set of line segments, the Voronoi edges are either linear or parabolic arcs.
@@ -9,6 +10,10 @@ After computing the Voronoi diagram, we approximate each parabolic edge by a pol
 %
 The \emph{deviation threshold} determines the maximum distance of the points on a parabolic arc from the approximating polyline.
 %
+The same linear approximation is done in the formal analysis of the planner using hybrid automata.
+%
+We abuse the terminology and refer to this linear approximation as the Voronoi diagram too.
+%
 This linear approximation simplifies the planner and its formal analysis.
 %
 A Voronoi diagram calculated by the planner is called a \emph{local} Voronoi diagram since it is computed for the track boundaries visible from LiDAR.
@@ -16,21 +21,10 @@ A Voronoi diagram calculated by the planner is called a \emph{local} Voronoi dia
 This is in contrast to the \emph{global} Voronoi diagram where the diagram is computed with respect to the whole track (which is not available to the car).
 
 
+%--- The planned path
 The next step is to choose a \emph{tracking path} based on the local Voronoi diagram.
 %
 We choose a path directly on \emph{on} the Voronoi diagram to try to stay as far as possible from the track boundaries (i.e. to be as safe as possible).
-%
-However, one can choose other paths, e.g. to cut corners of the Voronoi diagram and optimize the length or curvature of the path.
-%
-We need to make sure that the path is chosen based on the parts of the local Voronoi diagram that are consistent with the global Voronoi diagram. 
-%
-This is to ease the formal verification of the planner and controller.
-%
-The sufficient conditions for this consistency will be provided later.
-%
-Basically, the local Voronoi diagram is guaranteed to coincide with the global Voronoi diagram within a particular distance from the LiDAR sensor.
-%
-Therefore, the planner considers only the local Voronoi edges within that disk.
 %
 If we consider all the line segments representing the left boundary of the track as one obstacle, and all the line segments for the right boundary of the track as the other obstacle, the degree of all Voronoi vertices will be two.
 %

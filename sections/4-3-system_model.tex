@@ -60,51 +60,75 @@ The closed loop behavior of the vehicle dynamics is therefore given as:
 % %
 % Adding $v$ to the model explicitly models the dynamic interaction between the set point and the state of the vehicle.
 
-Notice that this closed loop behavior is accurate as long as the waypoint lies on the same line segment.
+Notice that this closed loop behavior is accurate as long as the way-point lies on the same line segment.
 %
-When the vehicle makes progress, the lookahead circle would intersect with a different line segment on the voronoi diagram.
+When the vehicle makes progress, the lookahead circle would intersect with a different line segment on the Voronoi diagram.
 %
-As a result, the coordinate system for modeling the evolution of vehicle state and the waypoint changes.
+As a result, the way-point as well as coordinate system for modeling the evolution of vehicle state change.
 %
-We model this change as a hybrid automata.
+We model this behavior as a hybrid automaton for a given circuit.
 
-\begin{definition} 
-A hybrid automata is defined as a tuple $\langle Mod, X, E, Flows \rangle$ where
-\begin{itemize}
-    \item \textbf{$Modes$} is the set of discrete modes,
-    \item \textbf{$X$} is the state space,
-    \item \textbf{$E$} is the set of discrete transitions among modes, and
-    \item \textbf{$Flows$} describes the evolution of the system in each mode.
-\end{itemize}
+\begin{figure}
+\centering
+\includegraphics[width=0.8\linewidth]{Figures/hybrid-automaton.jpeg}
+\caption{Hybrid automaton of a multiple-tank system.}
+\label{fig:ha}
+\end{figure}
+
+% \begin{definition} 
+% A hybrid automata is defined as a tuple $\langle Mod, X, E, Flows \rangle$ where
+% \begin{itemize}
+%     \item \textbf{$Modes$} is the set of discrete modes,
+%     \item \textbf{$X$} is the state space,
+%     \item \textbf{$E$} is the set of discrete transitions among modes, and
+%     \item \textbf{$Flows$} describes the evolution of the system in each mode.
+% \end{itemize}
+% \end{definition}
+
+\begin{definition}
+\label{def:hybridSystem}
+ A \emph{hybrid automaton} is a mathematical model of a hybrid system $H$ which is defined as a tuple $\langle Loc, X, Flow, Inv, E, G, Rst \rangle$ where:
+%  \vspace{-0.2cm}
+\begin{description}
+\item[$Loc$] is a finite set of locations.
+\item[$X$] $\subseteq \mathbb{R}^n$ is the state space of the behaviors.
+\item[$Flow$] $: Loc \rightarrow \mathcal{F}(X)$ assigns a  differential equation $\mathcal{F}$ over $X$ to each location of the hybrid automaton.
+\item[$Inv$] $: Loc \rightarrow 2^{\mathbb{R}^n}$ assigns an invariant set of states to each location.
+\item[$E$] $\subseteq Loc \times Loc$ is the set of discrete transitions.
+\item[$G$] $: E \rightarrow 2^{\mathbb{R}^n}$ defines the set of states for a enabled discrete transition.
+\item[$Rst$] $: E \times 2^{\mathbb{R}^n} \rightarrow 2^{\mathbb{R}^n}$ determines the set of states after a discrete  transition is taken.
+\end{description}
+% \vspace{-0.2cm}
+A hybrid system is \emph{linear} if each $\mathcal{F}$ is a linear differential equation and its invariants and guards are given as the conjunction of linear constraints.
 \end{definition}
 
-Often, $Flows$ are described as a collection of nonlinear differential equations, one for each mode.
+% Often, $Flows$ are described as a collection of nonlinear differential equations, one for each mode.
 %
-Each discrete transition $e = (mode, mode') \in E$ among the modes $mode, mode' \in Modes$ of the hybrid automata has an associated $guard(e)$ condition. The hybrid automata can take the transition only when the state of the trajectory satisfies the guard condition.
+Each discrete transition $e \doteq (loc, loc') \in E$ among locations  $loc, loc' \in Loc$ of the hybrid automata has an associated $G(e)$ condition. The hybrid automaton can take the transition $e$ only when the state of the trajectory satisfies $G(e)$.
 %
-Additionally, after taking the discrete transition $e$, the state of the system changes from its current state $x$ to a new state $x'$ defined according to a reset function $x' = reset(e,x)$.
+Additionally, after taking the transition $e$, the state of the system changes from its current state $x \in \mathbb{R}^n$ to a new state $x'$ defined according to a reset function $x' = Rst(e,x)$.
 %
 
-In the case of the vehicle following the waypoint on Voronoi diagram, when a new line segment is encountered by the lookahead circle, the change of basis variables (alignment of the x-axis along the new segment) is the reset function.
+% In the case of the vehicle following the waypoint on Voronoi diagram, when a new line segment is encountered by the lookahead circle, the change of basis variables (alignment of the x-axis along the new segment) is the reset function.
 %
-Notice that the set of states that take this transition lies on a circle of radius $\ell$ from an end point of the new line segment.
+As the vehicle following a way-point on Voronoi diagram encounters a new line segment, a discrete transition is enabled. Notice that the set of states that take this transition as defined by it's guard lies on a circle of radius $\ell$ from an end point of the new line segment.
 %
 This set is a non-convex set.
 %
-Performing analysis on such hybrid automata with non-convex guard conditions is very challenging.
+Performing reachability analysis with non-convex guard conditions is very challenging.
 %
-We therefore construct an abstract hybrid automata that allows more behaviors than the original hybrid automata, but is easier to analyze.
+We, therefore, compute a convex overapproximation of the original guard as shown in Fig.~\ref{fig:guard_inv_approx}. This abstraction of the hybrid automaton admits more behaviors than the original model, but is easier to analyze.
 %
-More specifically, we allow the hybrid automata to non-deterministically take a transition whenever the vehicle enters the convex overapproximation of the original guard condition.
+% More specifically, we allow the hybrid automata to non-deterministically take a transition whenever the vehicle enters the convex overapproximation of the original guard condition.
 %
-Given that we strictly increase the set of possible states that can take the discrete transitions, it is easy to observe that the abstract hybrid automata includes all the behaviors of the original hybrid automata.
+Since this guard over-approximation strictly increases the set of possible states that take the discrete transition, it is easy to observe that the abstract hybrid automaton includes all the behaviors of the original model.
 %
-Illustration of the abstraction of the guard condition for hybrid automata modeling the behavior of the vehicle is given in Figure~\ref{fig:guard_inv_approx}.
-
-
-Given a circuit, we construct the hybrid automata model of the vehicle moving in the lap using our Voronoi planning and pure pursuit control algorithm.
+% Illustration of the abstraction of the guard condition for hybrid automata modeling the behavior of the vehicle is given in Figure~\ref{fig:guard_inv_approx}.
 %
-In the next section, we present the details of the techniques employed to prove the safety and progress properties of the vehicle.
+%
+% Given a circuit, we construct the hybrid automata model of the vehicle moving in the lap using our Voronoi planning and pure pursuit control algorithm.
+%
+We next discuss the techniques for proving the safety and progress properties of the vehicle.
 
 % When the vehicle encounters a new line segment in the roadmap, the behavior of the model changes as the set point now evolves on the new line segment.
 % %

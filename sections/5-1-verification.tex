@@ -1,26 +1,19 @@
 %\subsection{Safety Verification}
 
-% \begin{figure}
-% \centering
-% \subfigure[]{%
-% \includegraphics[width=2.65in]{Figures/tracks/track1-voronoi-cora.jpg}%
-% \label{fig:track1_voronoi-cora}%
-% }\qquad
-% \subfigure[]{%
-% \includegraphics[width=2.65in]{Figures/tracks/track1-cora.jpg}%
-% \label{fig:track1_cora}%
-% }
-% \caption{Verification with respect to the rectangular track. Each turn depicts a different transition based on the track width. (a) highlights the Voronoi diagram for the track while (b) provides its corresponding reachable set computed in CORA. Different colors in the reachable set are representatives of different locations in the hybrid system model.}
+% \begin{figure*}
+%     \centering
+%     \subfigure[for small initial set]{\label{fig:track1_voronoi-cora}\includegraphics[width=3.2in]{Figures/tracks/track1-voronoi-cora.jpg}}
+%     \subfigure[for a large initial  set]{\label{fig:track1_cora-abstraction}\includegraphics[width=3.2in]{Figures/tracks/reachMap-obstacle_zoomed.png}}
+%     \caption{\textbf{Reachable set computation for Track-1}. In Fig.~\ref{fig:track1_voronoi-cora}, the fixed point is obtained in mode 3 in the second lap. The filled black rectangle depicts the initial set. In Fig.~\ref{fig:track1_cora-abstraction}, the smaller rectangle corresponds to the fixed point partition and larger one is the originally given initial set.}
 % \label{fig:eval_track1}
-% \end{figure}
+% \end{figure*}
 
-\begin{figure*}
+\begin{figure}
     \centering
-    \subfigure[for small initial set]{\label{fig:track1_voronoi-cora}\includegraphics[width=3.2in]{Figures/tracks/track1-voronoi-cora.jpg}}
-    \subfigure[for a large initial  set]{\label{fig:track1_cora-abstraction}\includegraphics[width=3.2in]{Figures/tracks/reachMap-obstacle_zoomed.png}}
-    \caption{\textbf{Reachable set computation for Track-1}. In Fig.~\ref{fig:track1_voronoi-cora}, the fixed point is obtained in mode 3 in the second lap. The filled black rectangle depicts the initial set. In Fig.~\ref{fig:track1_cora-abstraction}, the smaller rectangle corresponds to the fixed point partition and larger one is the originally given initial set.}
-\label{fig:eval_track1}
-\end{figure*}
+    \includegraphics[width=3.2in]{Figures/tracks/track1-voronoi-cora.jpg}
+\caption{\textbf{Reachable set computation for Track-1}. The fixed point is obtained in mode 3 in the second lap.}
+\label{fig:track1_voronoi-cora}
+\end{figure}
 
 % \begin{figure}
 % \centering
@@ -63,9 +56,10 @@ In the safety verification of our dynamical model, the obstacles or walls consti
 %
 % The given sequence of Voronoi edges is modeled as the hybrid automata. Typically, a hybrid automata has as many discrete modes as the number of Voronoi edges. 
 The initial set considered during reachable set computation in track-1 is $x \in [-0.3, 0.3]$, $y \in [-0.3, 0.3]$ and $\theta \in [-0.2, 0.2]$.
-The Voronoi diagram and the corresponding reachable set for track-1 are shown in Fig.~\ref{fig:track1_voronoi-cora}. Based on the track width, the turns in this track encompass 4 different transitions - wide to narrow, wide to wide, narrow to narrow, and narrow to wide. 
+The Voronoi diagram and the corresponding reachable set for track-1 are shown in Fig.~\ref{fig:track1_voronoi-cora}. Based on the track width, the turns in this track encompass 4 different transitions - wide to narrow, wide to wide, narrow to narrow, and narrow to wide. The fixed point of the reachable set computation is obtained in \emph{mode 3} in lap 2.
 %
-Also observe that the fixed point of the reachable set computation is obtained in \emph{mode 3} in lap 2. The values of state variables in \emph{mode 3} across lap-1 and lap-2 are depicted in Fig.~\ref{fig:track1-fixed-point-loc3} that establishes our fixed point claim. The reachable set computation results for other tracks are illustrated in Fig.~\ref{fig:eval_track2-track3-track4-track5} in the Appendix. CORA takes roughly a minute to compute the reachable set for each track.
+% Also observe that the fixed point of the reachable set computation is obtained in \emph{mode 3} in lap 2. The values of state variables in \emph{mode 3} across lap-1 and lap-2 are depicted in Fig.~\ref{fig:track1-fixed-point-loc3} that establishes our fixed point claim. 
+The reachable set computation results for other tracks are illustrated in Fig.~\ref{fig:eval_track2-track3-track4-track5} in the Appendix. CORA takes roughly a minute to compute the reachable set for each track.
 %, which is considered fast in the verification domain.
 
 % Fig.~\ref{fig:eval_track2} depicts the results obtained for more generalized track. It respectively takes 16 sec and 23 sec to verify the model for  rectangular and general tracks. Note that in both scenarios, after completing first lap, the reachable set achieves a fixed point during second location.
